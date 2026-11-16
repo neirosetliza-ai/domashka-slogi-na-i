@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Домашка: слоги на И</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@500;700;800&family=Golos+Text:wght@400;500;600&display=swap">
+<style>
+:root {
+  --bg: #F3F6FB; --ink: #141A26; --muted: #5B6578; --line: #141A26; --card: #FFFFFF;
+  --accent: #2457F5; --mark: #FFD84D; --mark-ink: #141A26;
+  --ok: #17874F; --ok-bg: #DDF3E6; --bad: #CF3030; --bad-bg: #FBE1E1; --soft: #E6ECF7;
+  --f-display: "Rubik", "Arial Rounded MT Bold", system-ui, sans-serif;
+  --f-body: "Golos Text", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0F131C; --ink: #EEF2FA; --muted: #9AA5BA; --line: #C9D3E6; --card: #181E2B;
+    --accent: #7E9DFF; --ok: #5DD596; --ok-bg: #12301F; --bad: #FF7A7A; --bad-bg: #3A1A1D; --soft: #222A3B;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0F131C; --ink: #EEF2FA; --muted: #9AA5BA; --line: #C9D3E6; --card: #181E2B;
+  --accent: #7E9DFF; --ok: #5DD596; --ok-bg: #12301F; --bad: #FF7A7A; --bad-bg: #3A1A1D; --soft: #222A3B;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 17px; line-height: 1.45;
+  padding-block: 20px 48px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+main { max-width: 720px; margin: 0 auto; display: flex; flex-direction: column; gap: 22px; }
+header { display: flex; flex-direction: column; gap: 12px; }
+h1 { font-family: var(--f-display); font-weight: 800; font-size: clamp(30px, 8vw, 44px); line-height: 1.05; margin: 0; text-wrap: balance; letter-spacing: -0.01em; }
+.progress { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.dots { display: flex; gap: 6px; }
+.dot { width: 34px; height: 12px; border-radius: 6px; background: var(--soft); border: 2px solid var(--line); }
+.dot.on { background: var(--ok); border-color: var(--ok); }
+.progress-text { font-weight: 600; color: var(--muted); font-size: 15px; }
+
+.ex { background: var(--card); border: 3px solid var(--line); border-radius: 22px; padding: 18px; display: flex; flex-direction: column; gap: 16px; }
+.ex-head { display: flex; gap: 12px; align-items: flex-start; }
+.num { flex: none; width: 40px; height: 40px; border-radius: 12px; background: var(--mark); color: var(--mark-ink); font-family: var(--f-display); font-weight: 800; font-size: 22px; display: grid; place-items: center; }
+.ex-head h2 { margin: 0; font-family: var(--f-display); font-weight: 700; font-size: 20px; line-height: 1.25; text-wrap: balance; }
+.hint { margin: 4px 0 0; color: var(--muted); font-size: 15px; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+.bar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+button.btn { font: 700 17px/1 var(--f-display); border: 3px solid var(--line); border-radius: 14px; padding: 13px 20px; cursor: pointer; background: var(--card); color: var(--ink); min-height: 48px; }
+button.btn:active { transform: translateY(1px); }
+.result { font-weight: 600; min-height: 1.45em; flex: 1 1 200px; }
+.result.good { color: var(--ok); }
+.result.warn { color: var(--bad); }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px 20px; }
+.item { border: 2.5px solid var(--line); border-radius: 16px; padding: 12px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.item.done { background: var(--ok-bg); border-color: var(--ok); }
+.pic { font-size: 40px; line-height: 1; text-align: center; }
+.build { display: flex; gap: 8px; }
+.word { border: 2.5px solid var(--line); border-radius: 14px; padding: 10px 8px; font-family: var(--f-display); font-weight: 700; font-size: 28px; letter-spacing: 0.04em; background: var(--card); text-align: center; flex: 1 1 0; min-width: 0; overflow-wrap: anywhere; }
+.word.fixed { background: var(--soft); }
+.word.slot { border-style: dashed; color: var(--muted); }
+.word.slot.ok { border-style: solid; border-color: var(--ok); background: var(--ok-bg); color: var(--ink); }
+.whole { text-align: center; font: 800 32px/1.1 var(--f-display); letter-spacing: 0.08em; }
+.whole .gap { display: inline-block; min-width: 1.1em; border-bottom: 4px solid var(--accent); color: var(--accent); }
+.whole .gap.ok { color: var(--ok); border-color: var(--ok); }
+.opts { display: flex; gap: 8px; }
+.opts.two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+button.opt { flex: 1 1 0; min-width: 0; font: 700 22px/1.1 var(--f-display); letter-spacing: 0.04em; border: 2.5px solid var(--line); border-radius: 14px; padding: 12px 6px; background: var(--card); color: var(--ink); cursor: pointer; min-height: 52px; overflow-wrap: anywhere; }
+button.opt:hover:not(:disabled) { background: var(--soft); }
+button.opt.bad { background: var(--bad-bg); border-color: var(--bad); }
+button.opt.ok { background: var(--ok-bg); border-color: var(--ok); }
+button.opt:disabled { cursor: default; opacity: .55; }
+button.opt.ok:disabled { opacity: 1; }
+
+@media (max-width: 520px) { .ex { padding: 14px; } }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>Домашка: слоги на И</h1>
+    <div class="progress">
+      <div class="dots" aria-hidden="true"><span class="dot" id="d1"></span><span class="dot" id="d2"></span><span class="dot" id="d3"></span></div>
+      <span class="progress-text" id="ptext">Сделано 0 из 3</span>
+    </div>
+  </header>
+
+  <section class="ex" aria-labelledby="t1">
+    <div class="ex-head"><div class="num">1</div>
+      <div><h2 id="t1">Закончи слово.</h2>
+      <p class="hint">Посмотри на картинку. Первый слог уже стоит. Нажми на второй слог.</p></div></div>
+    <div class="grid" id="ex1"></div>
+    <div class="bar">
+      <button class="btn" id="rst1" type="button">Начать заново</button>
+      <div class="result" id="res1" role="status" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <section class="ex" aria-labelledby="t2">
+    <div class="ex-head"><div class="num">2</div>
+      <div><h2 id="t2">И или Ы?</h2>
+      <p class="hint">Прочитай слово и выбери букву. Запомни: после Ж и Ш всегда пишем И.</p></div></div>
+    <div class="grid" id="ex2"></div>
+    <div class="bar">
+      <button class="btn" id="rst2" type="button">Начать заново</button>
+      <div class="result" id="res2" role="status" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <section class="ex" aria-labelledby="t3">
+    <div class="ex-head"><div class="num">3</div>
+      <div><h2 id="t3">Найди лишнее слово.</h2>
+      <p class="hint">Прочитай четыре слова. Нажми на то слово, в котором нет буквы И.</p></div></div>
+    <div class="grid" id="ex3"></div>
+    <div class="bar">
+      <button class="btn" id="rst3" type="button">Начать заново</button>
+      <div class="result" id="res3" role="status" aria-live="polite"></div>
+    </div>
+  </section>
+</main>
+
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var done = [false, false, false];
+  function refresh() {
+    var n = 0;
+    for (var i = 0; i < 3; i++) { $('d' + (i + 1)).classList.toggle('on', done[i]); if (done[i]) n++; }
+    $('ptext').textContent = n === 3 ? 'Вся домашка сделана. Молодец!' : 'Сделано ' + n + ' из 3';
+  }
+  function setRes(el, text, kind) { el.className = 'result' + (kind ? ' ' + kind : ''); el.textContent = text; }
+  function mk(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+  function flashBad(b) { b.classList.add('bad'); setTimeout(function () { b.classList.remove('bad'); }, 700); }
+
+  /* 1. закончи слово */
+  var E1 = [
+    ['🦊', 'ЛИ', 'СА', ['СО', 'СА', 'ЛА']],
+    ['🪚', 'ПИ', 'ЛА', ['ЛА', 'МО', 'ТУ']],
+    ['❄️', 'ЗИ', 'МА', ['МА', 'НО', 'ЛУ']],
+    ['🎬', 'КИ', 'НО', ['НО', 'ЛА', 'ДУ']],
+    ['🛋️', 'ДИ', 'ВАН', ['ВОН', 'ВАН', 'ВУН']],
+    ['🍋', 'ЛИ', 'МОН', ['МАН', 'МУН', 'МОН']]
+  ];
+  var r1 = $('res1'), i1 = [];
+  function upd1() {
+    var n = i1.filter(function (r) { return r.solved; }).length;
+    done[0] = n === E1.length; refresh();
+    setRes(r1, done[0] ? 'Все слова закончены. Молодец!' : 'Готово ' + n + ' из ' + E1.length, done[0] ? 'good' : '');
+  }
+  function build1() {
+    var box = $('ex1'); box.textContent = ''; i1 = [];
+    E1.forEach(function (it) {
+      var item = mk('div', 'item'), pic = mk('div', 'pic', it[0]); pic.setAttribute('aria-hidden', 'true');
+      var row = mk('div', 'build'), first = mk('div', 'word fixed', it[1]), slot = mk('div', 'word slot', '?');
+      row.appendChild(first); row.appendChild(slot);
+      var opts = mk('div', 'opts'), rec = { solved: false, btns: [] };
+      it[3].forEach(function (o) {
+        var b = mk('button', 'opt', o); b.type = 'button'; b.setAttribute('aria-label', 'Слог ' + o);
+        b.addEventListener('click', function () {
+          if (rec.solved) return;
+          if (o === it[2]) {
+            rec.solved = true; slot.textContent = o; slot.className = 'word slot ok'; b.classList.add('ok'); item.classList.add('done');
+            rec.btns.forEach(function (x) { x.disabled = true; }); upd1();
+          } else { flashBad(b); setRes(r1, 'Не подходит. Попробуй другой слог.', 'warn'); }
+        });
+        rec.btns.push(b); opts.appendChild(b);
+      });
+      item.appendChild(pic); item.appendChild(row); item.appendChild(opts); box.appendChild(item); i1.push(rec);
+    });
+    upd1();
+  }
+  $('rst1').addEventListener('click', build1); build1();
+
+  /* 2. И или Ы */
+  var E2 = [['Ж', 'РАФ', 'И'], ['Ш', 'НА', 'И'], ['МАШ', 'НА', 'И'], ['Ж', 'ВОТ', 'И'], ['Ш', 'ШКА', 'И'], ['Ж', 'ЛЕТ', 'И']];
+  var r2 = $('res2'), i2 = [];
+  function upd2() {
+    var n = i2.filter(function (r) { return r.solved; }).length;
+    done[1] = n === E2.length; refresh();
+    setRes(r2, done[1] ? 'Все слова написаны правильно. Молодец!' : 'Готово ' + n + ' из ' + E2.length, done[1] ? 'good' : '');
+  }
+  function build2() {
+    var box = $('ex2'); box.textContent = ''; i2 = [];
+    E2.forEach(function (it) {
+      var item = mk('div', 'item'), whole = mk('div', 'whole'), gap = mk('span', 'gap', ' ');
+      whole.appendChild(document.createTextNode(it[0])); whole.appendChild(gap); whole.appendChild(document.createTextNode(it[1]));
+      var opts = mk('div', 'opts two'), rec = { solved: false, btns: [] };
+      ['И', 'Ы'].forEach(function (o) {
+        var b = mk('button', 'opt', o); b.type = 'button'; b.setAttribute('aria-label', 'Буква ' + o);
+        b.addEventListener('click', function () {
+          if (rec.solved) return;
+          if (o === it[2]) {
+            rec.solved = true; gap.textContent = o; gap.classList.add('ok'); b.classList.add('ok'); item.classList.add('done');
+            rec.btns.forEach(function (x) { x.disabled = true; }); upd2();
+          } else { flashBad(b); setRes(r2, 'После Ж и Ш пишем И. Попробуй ещё.', 'warn'); }
+        });
+        rec.btns.push(b); opts.appendChild(b);
+      });
+      item.appendChild(whole); item.appendChild(opts); box.appendChild(item); i2.push(rec);
+    });
+    upd2();
+  }
+  $('rst2').addEventListener('click', build2); build2();
+
+  /* 3. лишнее слово */
+  var E3 = [
+    [['ЛИСА', 'ЗИМА', 'ПИЛА', 'ДОМ'], 'ДОМ'],
+    [['КИТ', 'РИС', 'ЛИМОН', 'МАК'], 'МАК'],
+    [['ВИНО', 'ЛУК', 'ДИВАН', 'КИНО'], 'ЛУК'],
+    [['ШИНА', 'ЖИРАФ', 'ШИШКА', 'ЖУК'], 'ЖУК'],
+    [['МАШИНА', 'СИНИЦА', 'ЛОШАДЬ', 'ВИНОГРАД'], 'ЛОШАДЬ'],
+    [['ТИГР', 'ЛИМОН', 'СЫР', 'КИТ'], 'СЫР']
+  ];
+  var r3 = $('res3'), i3 = [];
+  function upd3() {
+    var n = i3.filter(function (r) { return r.solved; }).length;
+    done[2] = n === E3.length; refresh();
+    setRes(r3, done[2] ? 'Все лишние слова найдены. Молодец!' : 'Готово ' + n + ' из ' + E3.length, done[2] ? 'good' : '');
+  }
+  function build3() {
+    var box = $('ex3'); box.textContent = ''; i3 = [];
+    E3.forEach(function (it) {
+      var item = mk('div', 'item'), opts = mk('div', 'opts two'), rec = { solved: false, btns: [] };
+      it[0].forEach(function (w) {
+        var b = mk('button', 'opt', w); b.type = 'button';
+        b.addEventListener('click', function () {
+          if (rec.solved) return;
+          if (w === it[1]) {
+            rec.solved = true; b.classList.add('ok'); item.classList.add('done');
+            rec.btns.forEach(function (x) { x.disabled = true; }); upd3();
+          } else { flashBad(b); setRes(r3, 'В этом слове есть И. Ищи слово без И.', 'warn'); }
+        });
+        rec.btns.push(b); opts.appendChild(b);
+      });
+      item.appendChild(opts); box.appendChild(item); i3.push(rec);
+    });
+    upd3();
+  }
+  $('rst3').addEventListener('click', build3); build3();
+
+  refresh();
+})();
+</script>
+</body>
+</html>
